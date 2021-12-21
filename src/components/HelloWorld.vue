@@ -69,6 +69,10 @@ export default {
             });
             const web3 = new Web3(provider);
             console.log(web3,'web3');
+            console.log(web3.eth,'web3.eth');
+            const accounts = await web3.eth.requestAccounts()
+            console.log(accounts[0],'accounts');
+            log.value= accounts
 
           } catch (error) {
             console.log(error,'the error????');
