@@ -1,50 +1,24 @@
 
 <template>
   <div>
-test hello v4
+test hello v5
   <button @click="action">Action</button>
   {{log}}
   {{log2}}
+
+    <button @click="action2">Action2</button>
   </div>
 </template>
 
 <script>
 /* eslint-disable */
-// https://web3js.readthedocs.io/en/v1.2.11/web3.html
-/* Web3.modules
-> {
-    Eth: Eth(provider),
-    Net: Net(provider),
-    Personal: Personal(provider),
-    Shh: Shh(provider),
-    Bzz: Bzz(provider),
-} */
-// https://npm.io/package/@walletconnect/web3-provider
-//  Get Accounts
-/* const accounts = await web3.eth.getAccounts();
-
-//  Get Chain Id
-const chainId = await web3.eth.chainId();
-
-//  Get Network Id
-const networkId = await web3.eth.net.getId();
-
-// Send Transaction
-const txHash = await web3.eth.sendTransaction(tx);
-
-// Sign Transaction
-const signedTx = await web3.eth.signTransaction(tx);
-
-// Sign Message
-const signedMessage = await web3.eth.sign(msg);
-
-// Sign Typed Data
-const signedTypedData = await web3.eth.signTypedData(msg); */
 import Web3 from "web3";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
  import { ref, onMounted } from 'vue'
 
+
+/* eslint-disable */
 export default {
   
   setup () {
@@ -63,7 +37,12 @@ await provider.enable();
 
 //  Create Web3
 const web3 = new Web3(provider);
-
+console.log(web3,'the web3 test');
+log2.push('test????')
+log.value='rorororo'
+ log2.push(Object.keys(web3.eth))  
+console.log(Object.keys(web3.eth) ,'Object.keys(web3)[0] '); 
+console.log(log2,'lgos2');
 // Subscribe to accounts change
 provider.on("accountsChanged", (accounts) => {
   console.log(accounts);
@@ -134,6 +113,7 @@ provider.on("disconnect", (code, reason) => {
             log.value = error?error.message:error;
             });
             const web3 = new Web3(provider);
+            // that one above works !!!!!!!!!!! on mobile and desktop tamade
             const accounts = await web3.eth.getAccounts();
             console.log(web3,'web3');
             //log2.push(web3)
@@ -164,3 +144,6 @@ provider.on("disconnect", (code, reason) => {
 <style lang="scss" scoped>
 
 </style>
+
+
+
