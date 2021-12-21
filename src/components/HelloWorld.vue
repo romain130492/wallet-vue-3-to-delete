@@ -1,3 +1,4 @@
+
 <template>
   <div>
 test hello
@@ -10,6 +11,7 @@ test hello
 /* eslint-disable */
 import Web3 from "web3";
 import Web3Modal from "web3modal";
+import WalletConnectProvider from "@walletconnect/web3-provider";
  import { ref, onMounted } from 'vue'
 
 export default {
@@ -23,7 +25,12 @@ export default {
 
             console.log('action');
             const providerOptions = {
-            /* See Provider Options Section */
+              walletconnect: {
+                  package: WalletConnectProvider, // required
+                  options: {
+                    infuraId: "69b27f2252994134974da9602463680f" // required
+                  }
+                }
           };
 
             const web3Modal = new Web3Modal({
@@ -55,11 +62,6 @@ export default {
             log.value = error?error.message:error;
       
           }
-
-        // Subscribe to accounts change
-
-       
-
       }
 
     return {
