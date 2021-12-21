@@ -18,11 +18,18 @@ export default {
   
   setup () {
     let log = ref('test')
+    const action2 = async()=>{
+      try {
+        
+      } catch (error) {
+        console.log(error,'error');
+      }
+
+    }
        const action = async () =>{
 
           try {
-            
-
+     
             console.log('action');
             const providerOptions = {
               walletconnect: {
@@ -33,21 +40,27 @@ export default {
                 }
           };
 
+        console.log('here 0');
             const web3Modal = new Web3Modal({
               network: "mainnet", // optional
-              cacheProvider: true, // optional
+              cacheProvider: false, // optional
               providerOptions // required
             });
-
+              /*      web3Modal.cachedProvider = ""; // This is referring to your instance not the class
+          localStorage.removeItem("WEB3_CONNECT_CACHED_PROVIDER"); */
+        console.log('here 1');
             const provider = await web3Modal.connect();
-            
+            console.log('here 2');
              provider.on("connect", (info) => {
-            console.log(info,'info ');
-            log.value = info;
-          });
+                console.log(info,'info ');
+                log.value = info;
+              });
              provider.on("accountsChanged", (accounts) => {
-                    log.value = accounts;
+              log.value = accounts;
               console.log(accounts,'accounts');
+            });
+            provider.on("chainChanged", (chainId) => {
+              console.log(chainId,'chianidn');
             });
 
             provider.on("disconnect", (error) => {
@@ -55,7 +68,7 @@ export default {
             log.value = error?error.message:error;
             });
             const web3 = new Web3(provider);
-
+            console.log(web3,'web3');
 
           } catch (error) {
             console.log(error,'the error????');
