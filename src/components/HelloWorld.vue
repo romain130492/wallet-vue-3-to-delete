@@ -1,7 +1,7 @@
 
 <template>
   <div>
-test hello
+test hello v3
   <button @click="action">Action</button>
   {{log}}
   </div>
