@@ -2,6 +2,7 @@
   <div>
 test hello
   <button @click="action">Action</button>
+  {{log}}
   </div>
 </template>
 
@@ -9,32 +10,61 @@ test hello
 /* eslint-disable */
 import Web3 from "web3";
 import Web3Modal from "web3modal";
+ import { ref, onMounted } from 'vue'
+
 export default {
   
   setup () {
+    let log = ref('test')
        const action = async () =>{
-      console.log('action');
-      const providerOptions = {
-      /* See Provider Options Section */
-    };
 
-    const web3Modal = new Web3Modal({
-      network: "mainnet", // optional
-      cacheProvider: true, // optional
-      providerOptions // required
-    });
+          try {
+            
 
-    const provider = await web3Modal.connect();
+            console.log('action');
+            const providerOptions = {
+            /* See Provider Options Section */
+          };
 
-    // Subscribe to accounts change
+            const web3Modal = new Web3Modal({
+              network: "mainnet", // optional
+              cacheProvider: true, // optional
+              providerOptions // required
+            });
+
+            const provider = await web3Modal.connect();
+            
+             provider.on("connect", (info) => {
+            console.log(info,'info ');
+            log.value = info;
+          });
+             provider.on("accountsChanged", (accounts) => {
+                    log.value = accounts;
+              console.log(accounts,'accounts');
+            });
+
+            provider.on("disconnect", (error) => {
+              console.log(error,'the error111');
+            log.value = error?error.message:error;
+            });
+            const web3 = new Web3(provider);
 
 
-    const web3 = new Web3(provider);
+          } catch (error) {
+            console.log(error,'the error????');
+            log.value = error?error.message:error;
+      
+          }
+
+        // Subscribe to accounts change
+
+       
 
       }
 
     return {
-      action
+      action,
+      log
     }
   }
 }
