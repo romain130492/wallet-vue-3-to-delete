@@ -43,6 +43,10 @@ log.value='rorororo'
  log2.push(Object.keys(web3.eth))  
 console.log(Object.keys(web3.eth) ,'Object.keys(web3)[0] '); 
 console.log(log2,'lgos2');
+console.log(web3.eth.requestAccounts,'web3.ethweb3.ethweb3.eth');
+const accounts = await web3.eth.requestAccounts()
+console.log(accounts,'the acocunts new 2');
+
 // Subscribe to accounts change
 provider.on("accountsChanged", (accounts) => {
   console.log(accounts);
