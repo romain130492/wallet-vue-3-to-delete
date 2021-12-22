@@ -1,7 +1,7 @@
 
 <template>
   <div>
-test hello v5
+test hello v6
 <!--   <button @click="action">Action</button>
   {{log}} -->
 
@@ -54,13 +54,74 @@ const ropstenWeb3 = new Web3(ropstenProvider) */
     let log = ref('test')
     let log2 = []
     
+
+/* const switchRequest = () => {
+  return window.ethereum.request({
+  method: "wallet_switchEthereumChain",
+  params: [{ chainId: "0x1" }],
+  });
+};
+
+const addChainRequest = () => {
+return window.ethereum.request({
+  method: "wallet_addEthereumChain",
+      params: [
+        {
+        chainId: "0xa86a",
+        chainName: "Avalanche Mainnet",
+        rpcUrls: ["https://api.avax.network/ext/bc/C/rpc"],
+        blockExplorerUrls: ["https://cchain.explorer.avax.network/"],
+        nativeCurrency: {
+        name: "AVAX",
+        symbol: "AVAX",
+        decimals: 18,
+        },
+      },
+    ],
+  });
+};
+
+export const switchNetwork = async () => {
+  if (window.ethereum) {
+  try {
+  await switchRequest();
+    } catch (error: any) {
+    if (error.code === 4902) {
+      try {
+        await addChainRequest();
+        await switchRequest();
+      } catch (addError) {
+      console.log(error);
+      }
+    }
+    console.log(error);
+    }
+  }
+}; */
+
     const action2 = async()=>{
       try {
-
+console.log('new???');
         //  Create WalletConnect Provider
-        const provider = new WalletConnectProvider({
-          infuraId:  "69b27f2252994134974da9602463680f" , // Required
-        });
+        const provider = new WalletConnectProvider(
+          {
+        rpc: {
+          137:'https://matic-mainnet.chainstacklabs.com'
+        },
+     /*    chainId: [137], */
+        //infuraId: "69b27f2252994134974da9602463680f" 
+      }
+          
+          
+        /*   {
+      
+          rpc: {
+                  56: 'https://bsc-dataseed.binance.org/',
+                },
+                network: 'binance',
+                chainId: 56,
+          infuraId:  "69b27f2252994134974da9602463680f" , 
+        }   */     );
 
         //  Enable session (triggers QR Code modal)
         await provider.enable();
