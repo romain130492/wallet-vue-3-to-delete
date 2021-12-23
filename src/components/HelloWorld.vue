@@ -1,9 +1,11 @@
 
 <template>
   <div>
-test hello v6
-<!--   <button @click="action">Action</button>
-  {{log}} -->
+test hello v7
+ <button @click="action">Action 1</button>
+  {{log}} 
+
+ <button @click="connectWalletMetamask">  connectWalletMetamask</button>
 
     <button @click="action2">Action2</button>
 {{log}} 
@@ -18,6 +20,7 @@ import Web3 from "web3";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
  import { ref, onMounted } from 'vue'
+ const Moralis = require('moralis');
 
 import Matic from "maticjs"
 
@@ -26,6 +29,14 @@ import Matic from "maticjs"
 export default {
   
   setup () {
+
+    Moralis.initialize('xeefjYVA5VAUT2XHxLnax6v25kM6jLoQJWvzIoJVPkJfyo9rpyUnt4RtAKjVmjQi');
+    Moralis.serverURL = 'https://qqmhgwptk8vf.usemoralis.com:2053/server';
+  const init =async  () =>{
+    window.web3 = await Moralis.Web3.enable();
+    console.log(window.web3,'moralis web3');
+  }
+  init()
 
 /*     const maticProvider = new WalletConnectProvider(
   {
@@ -48,7 +59,6 @@ const ropstenProvider = new WalletConnectProvider({
 
 const maticWeb3 = new Web3(maticProvider)
 const ropstenWeb3 = new Web3(ropstenProvider) */
-
 
 
     let log = ref('test')
@@ -99,6 +109,97 @@ export const switchNetwork = async () => {
   }
 }; */
 
+   const initListeners = () => {
+    // @ts-ignore
+      const { ethereum } = window;
+      ethereum.on('accountsChanged', (accounts) => {
+        console.info('account changed', accounts);
+      });
+      ethereum.on('connect', () => {
+        console.info('connect');
+      });
+      ethereum.on('disconnect', () => {
+        console.info('connect');
+      });
+    };
+
+        const connectWallet = async (walletProvider='metamask') => {
+      console.log('connectWallet')
+      try {
+
+        let walletID;
+          walletID = await connectWalletMetamask();
+        if (!walletID) {
+          throw Error('connectWallet: no walletID');
+        }
+        currentWallet.value = walletID;
+        await updateWalletDb(walletID, walletProvider, isWalletTokenAdded);
+        updateWalletProviderSelected(walletProvider);
+        ctx.emit('wallet-connected', {walletID, isManual:false});
+      } catch (error) {
+        console.error('connectWallet(), error:', error);
+      }
+    };
+
+   const addGtrTokenToWallet = async () => {
+      try {
+        // @ts-ignore
+        const { ethereum } = window;
+        if (!ethereum) {
+          throw Error('addGtrTokenToWallet(): ethereum is null');
+        }
+   
+        return ethereum
+          .request({
+            method: 'wallet_watchAsset',
+            params: {
+              type: 'ERC20',
+              options: {
+                address: '0x8ff36c854d901620476230dd8fba6780ad44c58a', // The address that the token is at.
+                symbol: 'GTR', // A ticket symbol or shorthand, up to 5 chars.
+                decimals: 18, // The number of decimals in the token
+                image: 'https://gigs.gig-gly.com/icons/gig-gly-coin2.png', // A string url of the token logo // giggly-color.png
+              },
+            },
+          })
+          .then((success) => {
+            if (success) {
+              console.log('GTR token successfully added to wallet!', success);
+              return true;
+            }
+            return false;
+          })
+          .catch(console.error);
+      } catch (error) {
+        throw Error(`addGtrTokenToWallet(): ${error}`);
+      }
+    };
+
+
+    const connectWalletMetamask = async () => {
+      try {
+        // @ts-ignore
+        //const { ethereum } = window;
+        const ethereum = window.web3.eth;
+        console.log(ethereum,'the etheumr here');
+        if (!ethereum) {
+          feedbackWalletProvider.value = 'You need to install <a target=\'_blank\' href=\'https://metamask.io/\'>Metamask.</a>';
+          return;
+        }
+        // const isWalletTokenAdded = await addGtrTokenToWallet();
+        console.log('enable metamast');
+        //await ethereum.enable();
+        initListeners();
+        const accounts = await ethereum.request({
+          method: 'eth_requestAccounts',
+        });
+        console.log(accounts ,'accounts accounts ');
+        return accounts[0];
+      } catch (error) {
+        console.error(`connectWalletMetamask(): ${error}`);
+        return null;
+      }
+    };
     const action2 = async()=>{
       try {
 console.log('new???');
@@ -161,8 +262,8 @@ console.log('new???');
         console.log(error,'error');
       }
     }
-    
-     /*   const action = async () =>{
+
+       const action = async () =>{
 
           try {
      
@@ -225,11 +326,13 @@ console.log('new???');
             log.value = error?error.message:error;
       
           }
-      } */
+      } 
 
     return {
-/*       action, */
+   action, 
             action2,
+            connectWalletMetamask,
+            initListeners,
    
       log,
       log2
